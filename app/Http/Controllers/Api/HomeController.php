@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Home;
 use App\Models\Product;
+use App\Models\Section;
 use App\Models\Slider;
+use App\Models\VendorMessage;
+use App\Models\VendorNotification;
 use App\Traits\GeneralApi;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-
     public function category()
     {
         $category = Category::all();
@@ -84,11 +86,12 @@ class HomeController extends Controller
 
     public function productWithCategoryId($id)
     {
-       $product = Product::query()->where('category_id', $id)->with('images')->get();
+        $product = Product::query()->where('category_id', $id)->with('images')->get();
         return GeneralApi::returnData(201, 'Success', $product);
     }
 
-    public function getProductById(Request $request) {
+    public function getProductById(Request $request)
+    {
         $request->validate([
             'id' => 'required'
         ]);
@@ -102,6 +105,7 @@ class HomeController extends Controller
         return GeneralApi::returnData('200', 'Successfully', $product);
 
     }
+
     public function All_Slider()
     {
         $slider = Slider::all();
@@ -130,5 +134,52 @@ class HomeController extends Controller
             "msg" => "Successfully",
             "data" => $about[0]
         ]);
+    }
+
+    public function vendorMessages()
+    {
+        try {
+            $message = VendorMessage::query()->where('vendor_id', auth('vendor_api')->user()->id)->get();
+            if (count($message) > 0) {
+                return GeneralApi::returnData(200, 'success', $message);
+            } else {
+                return GeneralApi::returnData(204, 'no data', []);
+            }
+
+        } catch (\Exception $exception) {
+            return redirect()->back()->withErrors(['error' => $exception->getMessage()]);
+        }
+    }
+
+    public function vendorNotifications()
+    {
+        try {
+
+            $notification = VendorNotification::query()->where('vendor_id', auth('vendor_api')->user()->id)->get();
+            if (count($notification) > 0) {
+                return GeneralApi::returnData(200, 'success', $notification);
+            } else {
+                return GeneralApi::returnData(204, 'no data', []);
+            }
+
+        } catch (\Exception $exception) {
+            return redirect()->back()->withErrors(['error' => $exception->getMessage()]);
+        }
+    }
+
+    public function sections()
+    {
+        try {
+
+            $sections = Section::query()->with('products.images')->get();
+            if (count($sections) > 0) {
+                return GeneralApi::returnData(200, 'success', $sections);
+            } else {
+                return GeneralApi::returnData(204, 'no data', []);
+            }
+
+        } catch (\Exception $exception) {
+            return redirect()->back()->withErrors(['error' => $exception->getMessage()]);
+        }
     }
 }

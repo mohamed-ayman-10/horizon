@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Api\SocialiteController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +19,16 @@ Route::get('/', function () {
     return redirect()->route('admin.index');
 });
 
-Route::get('reset', function (){
+Route::get('log', function () {
+    return view('log');
+});
+
+Route::get('auth/facebook', [SocialiteController::class , 'facebookLogin']);
+Route::get('auth/facebook/redirect', [SocialiteController::class , 'facebookRedirect']);
+Route::get('auth/google', [SocialiteController::class , 'googleLogin']);
+Route::get('auth/google/redirect', [SocialiteController::class , 'googleRedirect']);
+
+Route::get('reset', function () {
     Artisan::call('config:cache');
     Artisan::call('config:clear');
     Artisan::call('cache:clear');

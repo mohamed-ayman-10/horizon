@@ -137,6 +137,10 @@
                             <li><a href="{{ route('admin.section.offer.index') }}" class="slide-item">Offers</a></li>
                             <li><a href="{{ route('admin.section.weeklyOffer.index') }}" class="slide-item">Weekly
                                     Offers</a></li>
+                            <li><a href="{{ route('admin.section.fristCategory.index') }}" class="slide-item">First Category</a></li>
+                            <li><a href="{{ route('admin.section.lastCategory.index') }}" class="slide-item">Last Category</a></li>
+                            <li><a href="{{ route('admin.section.firstProduct.index') }}" class="slide-item">First Product</a></li>
+                            <li><a href="{{ route('admin.section.lastProduct.index') }}" class="slide-item">Last Product</a></li>
                             <li><a href="{{ route('admin.product_section.index') }}" class="slide-item">All Product</a>
                             </li>
                         @endcan

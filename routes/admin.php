@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AllProductController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DeleviryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductSectionController;
@@ -115,10 +116,10 @@ Route::prefix('products')->name('product.')->controller('ProductController')->gr
 
 // Categories
 Route::middleware('auth:admin')->prefix('categories')->name('categories.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('/');
-    Route::post('create/', [\App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('create');
-    Route::post('update/', [\App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('update');
-    Route::get('delete/{id}', [\App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('destroy');
+    Route::get('/', [CategoryController::class, 'index'])->name('/');
+    Route::post('create/', [CategoryController::class, 'store'])->name('create');
+    Route::post('update/', [CategoryController::class, 'update'])->name('update');
+    Route::get('delete/{id}', [CategoryController::class, 'destroy'])->name('destroy');
 });
 
 //User
@@ -131,13 +132,43 @@ Route::middleware('auth:admin')->controller(\App\Http\Controllers\Admin\UserCont
 
 
 Route::prefix('section')->name('section.')->middleware('auth:admin')->group(function () {
+    // Offers
     Route::namespace('Sections')->controller('OfferController')->prefix('offer')->name('offer.')->group(function () {
         Route::get('', 'index')->name('index');
         Route::post('store', 'store')->name('store');
         Route::get('destroy/{id}', 'destroy')->name('destroy');
     });
 
+    // Weekly Offers
     Route::namespace('Sections')->controller('WeeklyOfferController')->prefix('weeklyOffer')->name('weeklyOffer.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::post('store', 'store')->name('store');
+        Route::get('destroy/{id}', 'destroy')->name('destroy');
+    });
+
+    // First Category
+    Route::namespace('Sections')->controller('FristCategoryController')->prefix('fristCategory')->name('fristCategory.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::post('store', 'store')->name('store');
+        Route::get('destroy/{id}', 'destroy')->name('destroy');
+    });
+
+    // Last Category
+    Route::namespace('Sections')->controller('LastCategoryController')->prefix('lastCategory')->name('lastCategory.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::post('store', 'store')->name('store');
+        Route::get('destroy/{id}', 'destroy')->name('destroy');
+    });
+
+    // First Product
+    Route::namespace('Sections')->controller('FirstProductController')->prefix('firstProduct')->name('firstProduct.')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::post('store', 'store')->name('store');
+        Route::get('destroy/{id}', 'destroy')->name('destroy');
+    });
+
+    // Last Product
+    Route::namespace('Sections')->controller('LastProductController')->prefix('lastProduct')->name('lastProduct.')->group(function () {
         Route::get('', 'index')->name('index');
         Route::post('store', 'store')->name('store');
         Route::get('destroy/{id}', 'destroy')->name('destroy');

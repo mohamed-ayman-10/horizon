@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CardController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\SectionController;
+use App\Http\Controllers\Api\SocialiteController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
@@ -101,7 +102,15 @@ Route::middleware('jwt.verify')->group(function () {
         Route::post('', 'orders');
         Route::post('orderByProductId/{product_id}', 'orderByProductId');
     });
+
+    // Vendor Messages
+    Route::post('vendorMessages', [HomeController::class, 'vendorMessages']);
+    // Vendor Notification
+    Route::post('vendorNotifications', [HomeController::class, 'vendorNotifications']);
 });
+
+// Sections All Product
+Route::get('sections', [HomeController::class, 'sections']);
 
 // Governorates
 Route::get('governorates', function () {
@@ -114,4 +123,14 @@ Route::get('governorates', function () {
 Route::controller(SectionController::class)->prefix('section')->group(function () {
     Route::post('offers', 'offers');
     Route::post('weeklyOffers', 'weeklyOffers');
+    Route::post('firstCategory', 'firstCategory');
+    Route::post('lastCategory', 'lastCategory');
+    Route::post('firstProduct', 'firstProduct');
+    Route::post('lastProduct', 'lastProduct');
 });
+
+// Socialite
+//Route::controller(SocialiteController::class)->prefix('auth')->group(function () {
+//    Route::get('facebook', 'facebook');
+//    Route::get('facebook/redirect', 'facebookRedirect');
+//});

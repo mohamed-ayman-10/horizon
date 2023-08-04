@@ -19,8 +19,8 @@
                             <thead>
                             <tr>
                                 <th class="wd-15p border-bottom-0">#</th>
-                                <th class="wd-15p border-bottom-0">English Title</th>
-                                <th class="wd-20p border-bottom-0">Arabic Title</th>
+                                <th class="wd-15p border-bottom-0">Title</th>
+                                <th class="wd-15p border-bottom-0">SubCategory</th>
                                 <th class="wd-20p border-bottom-0">Image</th>
                                 <th class="wd-20p border-bottom-0">Actions</th>
                             </tr>
@@ -29,8 +29,8 @@
                             @foreach($categories as $index=>$item)
                                 <tr>
                                     <td>{{$index+1}}</td>
-                                    <td>{{$item->getTranslation('title', 'en')}}</td>
-                                    <td>{{$item->getTranslation('title', 'ar')}}</td>
+                                    <td>{{$item->title}}</td>
+                                    <td>{{isset($item->parent) ? $item->parents->title : 'Main Ctegory'}}</td>
                                     <td>
                                         <img src="{{asset('assets/' . $item->image)}}" width="100" height="100"/>
 
@@ -73,6 +73,17 @@
                                                                placeholder="Arabic Title" required>
                                                     </div>
                                                     <div class="form-group">
+                                                        <label class="form-label">Sub Category</label>
+                                                        <select class="form-select" name="category_id">
+                                                            <option @if($item->parent == null) selected @endif value="{{null}}">Main Category</option>
+                                                            @foreach($mainCategories as $category)
+                                                                @if($category->id != $item->id)
+                                                                    <option @if($category->id == $item->parent) selected @endif value="{{$category->id}}">{{$category->title}}</option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
                                                         <label class="form-label">Images</label>
                                                         <input type="file" name="image" multiple accept="image/*"
                                                                class="form-control form-control-lg"
@@ -82,7 +93,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="submit" class="btn btn-primary">Update</button>
-                                                    <button class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -137,6 +148,15 @@
                             <label class="form-label">Arabic Title</label>
                             <input type="text" name="title_ar" value="{{old('title_ar')}}" class="form-control"
                                    placeholder="Arabic Title" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sub Category</label>
+                            <select class="form-select" name="category_id">
+                                <option selected value="{{null}}">Main Category</option>
+                                @foreach($mainCategories as $category)
+                                    <option value="{{$category->id}}">{{$category->title}}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Images</label>

@@ -12,6 +12,7 @@
         "kavenegar/php": "^1.2",
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",
+        "laravel/socialite": "^5.8",
         "laravel/tinker": "^2.7",
         "laravelcollective/html": "^6.4",
         "mediaburst/clockworksms": "^2.0",
