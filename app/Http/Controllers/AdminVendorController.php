@@ -20,10 +20,14 @@ class AdminVendorController extends Controller
 
     public function publishSelected(Request $request) {
         try {
-
+            $request->validate([
+                'name_category_id' => 'required',
+                'ids' => 'required'
+            ]);
             foreach ($request->ids as $id) {
                 Product::query()->where('id', $id)->update([
-                    'status' => 1
+                    'status' => 1,
+                    'name_category_id' => $request->name_category_id,
                 ]);
             }
 
@@ -47,10 +51,14 @@ class AdminVendorController extends Controller
     }
 
 
-    public function sharing_product_vendor($id)
+    public function sharing_product_vendor($id, Request $request)
     {
+        $request->validate([
+           'name_category_id' => 'required'
+        ]);
         Product::where('id', $id)->update([
-            'status' => 1
+            'status' => 1,
+            'name_category_id' => $request->name_category_id,
         ]);
         return back()->with('success', 'Publish Successfully');
     }

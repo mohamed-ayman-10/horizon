@@ -35,6 +35,7 @@ class OrderController extends Controller
                 'user_id' => $user_id,
                 'quantity' => $product->quantity,
                 'total_price' => $product->total,
+                'sale' => $product->sale + $product->quantity,
             ]);
 
             $product->delete();

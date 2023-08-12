@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Home;
+use App\Traits\FileUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -10,68 +11,50 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $home =  Home::all();
-        $iteme = $home[0];
+        $item = Home::query()->first();
+        return view('admin/home/index', compact('item'));
+    }
 
+    public function store(Request $request)
+    {
+        try {
 
+            $data = $request->except('_token');
+            if ($request->hasFile('logo')) {
+                $data['logo'] = FileUpload::File('logo', $request->logo);
+            }
 
-        return view('admin/home/index', compact('iteme'));
+            Home::query()->create($data);
+
+            return back()->with('success', 'Create Successfully');
+
+        } catch (\Exception $exception) {
+            return back()->withErrors(['error' => $exception->getMessage()]);
+        }
     }
 
     public function update(Request $request)
     {
-        if ($request->file('logo')) {
-            $file =  Storage::disk('uploadFile')->put('logo', $request->logo);
+        try {
 
-
-            if ($count = Home::count() == 0) {
-                Home::create([
-                    'address' => $request->address,
-                    'phone' => $request->phone,
-                    'facebook' => $request->facebook,
-                    'instagram' => $request->instagram,
-                    'whatsapp' => $request->whatsapp,
-                    'logo' => $file
-                ]);
-            } else {
-
-                Home::where('id', 1)->update([
-                    'address' => $request->address,
-                    'phone' => $request->phone,
-                    'facebook' => $request->facebook,
-                    'instagram' => $request->instagram,
-                    'whatsapp' => $request->whatsapp,
-                    'logo' => $file
-                ]);
+            $data = $request->except('_token');
+            $setting = Home::query()->firstOrFail();
+            if ($request->hasFile('logo')) {
+                FileUpload::Delete($setting->logo);
+                $data['logo'] = FileUpload::File('logo', $request->logo);
             }
-            return back()->with('success', 'Update Successfully');
-        } else {
-            if ($count = Home::count() == 0) {
-                Home::create([
-                    'address' => $request->address,
-                    'phone' => $request->phone,
-                    'facebook' => $request->facebook,
-                    'instagram' => $request->instagram,
-                    'whatsapp' => $request->whatsapp,
 
-                ]);
-            } else {
+            $setting->update($data);
 
-                Home::where('id', 1)->update([
-                    'address' => $request->address,
-                    'phone' => $request->phone,
-                    'facebook' => $request->facebook,
-                    'instagram' => $request->instagram,
-                    'whatsapp' => $request->whatsapp,
+            return back()->with('success', 'Create Successfully');
 
-                ]);
-            }
-            return back()->with('success', 'Update Successfully');
+        } catch (\Exception $exception) {
+            return back()->withErrors(['error' => $exception->getMessage()]);
         }
-
-
     }
-    public function about (){
+
+    public function about()
+    {
 
     }
 }

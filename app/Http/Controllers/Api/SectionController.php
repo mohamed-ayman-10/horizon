@@ -9,12 +9,35 @@ use App\Models\LastCategory;
 use App\Models\LastProduct;
 use App\Models\OfferSection;
 use App\Models\Product;
+use App\Models\Section;
 use App\Models\WeeklyOfferSection;
 use App\Traits\GeneralApi;
 use Illuminate\Http\Request;
 
 class SectionController extends Controller
 {
+
+    public function allProductSection() {
+        try {
+
+            $sections = Section::query()->with('products.images')->paginate(5);
+            return GeneralApi::returnData(200, 'success', $sections);
+
+        }catch (\Exception $exception) {
+            return response()->json($exception->getMessage());
+        }
+    }
+
+    public function allProduct() {
+        try {
+
+            $sections = Product::query()->with('images')->paginate(5);
+            return GeneralApi::returnData(200, 'success', $sections);
+
+        }catch (\Exception $exception) {
+            return response()->json($exception->getMessage());
+        }
+    }
     public function offers()
     {
         try {

@@ -4,21 +4,56 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller
 {
-    public function facebookLogin()
+
+    public function socialite(Request $request)
+    {
+        try {
+            $request->validate([
+                'provider_id' => 'required',
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required|email',
+            ]);
+
+            $data = User::query()->updateOrCreate([
+                'provider_id' => $request->provider_id
+            ], [
+                'provider_id' => $request->provider_id,
+                'name' => $request->first_name . ' ' . $request->last_name,
+                'email' => $request->email
+            ]);
+
+            $log = auth('api')->login($data);
+
+            return $this->createNewToken($log);
+        }catch (\Exception $exception) {
+            return response()->json($exception->getMessage());
+        }
+    }
+    public function facebookLogin(Request $request)
     {
 //        return Socialite::driver('facebook')->redirect();
 
-        return Socialite::driver('facebook')->fields([
-            'first_name', 'last_name', 'email', 'phone', 'gender', 'birthday'
-        ])->scopes([
-            'email', 'user_birthday'
-        ])->redirect();
+        $data = User::query()->updateOrCreate([
+            'provider_id' => $request->provider_id
+        ], [
+            'provider_id' => $request->provider_id,
+            'name' => $request->first_name . ' ' . $request->last_name,
+            'email' => $request->email
+        ]);
+
+        $log = auth('api')->login($data);
+
+        return $this->createNewToken($log);
+
     }
+
 
     public function facebookRedirect()
     {
@@ -26,54 +61,71 @@ class SocialiteController extends Controller
         $user = Socialite::driver('facebook')->fields([
             'first_name', 'last_name', 'email', 'gender', 'birthday'
         ])->user();
-        // stroing data to our use table and logging them in
-        $data = [
-            'provider_id' => $user->getId(),
-            'name' => $user->getName(),
-            'first_name' => $user->getName(),
-            'email' => $user->getEmail()
-        ];
 
+//        dd($user->token);
 
-        //after login redirecting to home page
-        dd($user);
+        $data = User::query()->updateOrCreate([
+            'provider_id' => $user["id"]
+        ], [
+            'provider_id' => $user["id"],
+            'name' => $user["first_name"] . ' ' . $user["last_name"],
+            'email' => $user["email"]
+        ]);
 
-//        $user = Socialite::driver('facebook')->redirect();
-//
-//        dd($user);
-//
-//        $data = User::query()->where('email', $user->email)->first();
-//
-//        if (is_null($data)) {
-//            $users['name'] = $user->nickname;
-//            $users['email'] = $user->email;
-//            $data = User::query()->create($users);
-//        }
-//
-//        Auth::login($data);
-//
-//        return redirect('log');
+        $log = auth('api')->login($data);
+
+        return $this->createNewToken($log);
     }
 
-    public function googleLogin()
+
+    public function googleLogin(Request $request)
     {
-        return Socialite::driver('google')->redirect();
+//        return Socialite::driver('google')->redirect();
+
+        $data = User::query()->updateOrCreate([
+            'provider_id' => $request->provider_id
+        ], [
+            'provider_id' => $request->provider_id,
+            'name' => $request->first_name . ' ' . $request->last_name,
+            'email' => $request->email
+        ]);
+
+        $log = auth('api')->login($data);
+
+        return $this->createNewToken($log);
+
     }
 
     public function googleRedirect()
     {
-        $googleUser = Socialite::driver('google')->redirect();
+        $user = Socialite::driver('google')->stateless()->redirect();
+//        $finduser = User::query()->where('gauth_id', $user->id)->first();
 
-        $user = User::query()->updateOrCreate([
-            'provider_id' => $googleUser->id,
-        ], [
-            'provider_id' => $googleUser->id,
-            'name' => $googleUser->name,
-            'email' => $googleUser->email,
-        ]);
+        dd($user);
+//        $user = User::query()->updateOrCreate([
+//            'provider_id' => $googleUser->id,
+//        ], [
+//            'provider_id' => $googleUser->id,
+//            'name' => $googleUser->name,
+//            'email' => $googleUser->email,
+//        ]);
+
+        dd($googleUser);
 
         Auth::login($user);
 
         return redirect('/dashboard');
     }
+
+
+    protected function createNewToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60 * 24 * 30,
+            'user' => auth('api')->user()
+        ]);
+    }
+
 }

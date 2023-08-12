@@ -8,12 +8,13 @@ trait FileUpload
 {
 
     static public function File($type, $file) {
-        $file_name = $type . '-' . now() . '-' . $file->getClientOriginalName();
-        return $file->storeAs('images', $file_name, 'uploadFile');
+        $extention = strtolower($file->getClientOriginalExtension());
+        $name = time() . rand(100, 999) . '.' . $extention;
+        return $file->move($type, $name);
     }
 
     static public function Delete($file) {
-        return Storage::disk('uploadFile')->delete($file);
+        return unlink($file);
     }
 
 }

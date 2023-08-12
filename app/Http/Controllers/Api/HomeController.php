@@ -17,7 +17,7 @@ class HomeController extends Controller
 {
     public function category()
     {
-        $category = Category::all();
+        $category = Category::query()->with('children')->get();
 
         if ($category->count() == 0) {
             return response()->json([
@@ -124,16 +124,13 @@ class HomeController extends Controller
         ]);
     }
 
-    public function about()
+    public function setting()
     {
 
-        $about = Home::all();
+        $setting = Home::query()->firstOrFail();
 
-        return response()->json([
-            "status" => 200,
-            "msg" => "Successfully",
-            "data" => $about[0]
-        ]);
+        return GeneralApi::returnData(200, 'success', $setting);
+
     }
 
     public function vendorMessages()

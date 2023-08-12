@@ -6,9 +6,8 @@ use App\Models\Image;
 use App\Models\Product;
 use App\Traits\FileUpload;
 use App\Traits\GeneralApi;
-use http\Env\Response;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +25,7 @@ class ProductController extends Controller
     {
         DB::beginTransaction();
         try {
-
+//            return $request->images;
             $validator = Validator::make($request->all(), [
                 'title_ar' => 'required|string|min:2',
                 'title_en' => 'required|string|min:2',
@@ -43,11 +42,12 @@ class ProductController extends Controller
             if (!$request->hasFile('images')) {
                 return response()->json(['upload_file_not_found'], 400);
             }
-            $file = $request->file('images');
-            if (!$file->isValid()) {
-                return response()->json(['invalid_file_upload'], 400);
-            }
 
+            foreach ($request->images as $file) {
+                if (!$file->isValid()) {
+                    return response()->json(['invalid_file_upload'], 400);
+                }
+            }
 
             $product = new Product();
             $product->title = [
@@ -61,10 +61,14 @@ class ProductController extends Controller
             $product->vendor_id = Auth::guard('vendor_api')->user()->id;
             $product->save();
 
-            $image = new Image();
-            $image->product_id = $product->id;
-            $image->path = FileUpload::File('product', $file);
-            $image->save();
+            if ($request->images) {
+                foreach ($request->images as $file) {
+                    $image = new Image();
+                    $image->product_id = $product->id;
+                    $image->path = FileUpload::File('images/products', $file);
+                    $image->save();
+                }
+            }
 
             DB::commit();
             return GeneralApi::returnData(201, 'Create Successfully', $product);
@@ -108,16 +112,6 @@ class ProductController extends Controller
                 return response()->json($validator->errors(), 422);
             }
 
-            if ($request->hasFile('images')) {
-                if (!$request->hasFile('images')) {
-                    return response()->json(['upload_file_not_found'], 400);
-                }
-                $file = $request->file('images');
-                if (!$file->isValid()) {
-                    return response()->json(['invalid_file_upload'], 400);
-                }
-            }
-
             $product = Product::query()->where('vendor_id', \auth('vendor_api')->user()->id)->findOrFail($id);
             $product->title = [
                 'ar' => $request->title_ar,
@@ -130,12 +124,6 @@ class ProductController extends Controller
             $product->vendor_id = Auth::guard('vendor_api')->user()->id;
             $product->save();
 
-            if ($request->hasFile('images')) {
-                $image = Image::query()->where('product_id', $id)->firstOrFail();
-                FileUpload::Delete($image->path);
-                $image->path = FileUpload::File('product', $file);
-                $image->save();
-            }
 
             DB::commit();
             return GeneralApi::returnData(201, 'Update Successfully', $product);
@@ -156,22 +144,19 @@ class ProductController extends Controller
                 ->where('id', $id)
                 ->first();
 
-
-            $image = Image::query()->where('product_id', $product->id)->first();
-
-            FileUpload::Delete($image->path);
-
+            $images = Image::query()->where('product_id', $product->id)->get();
+            foreach ($images as $image) {
+                FileUpload::Delete($image->path);
+            }
             $product->delete();
-            $image->delete();
 
             DB::commit();
             return GeneralApi::returnData(200, 'Delete Successfully', $product);
-        }catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             DB::rollBack();
             return response()->json($exception->getMessage());
         }
 
-
-
     }
+
 }

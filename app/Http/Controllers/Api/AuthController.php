@@ -66,7 +66,7 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         if ($request->file('image')) {
-            $user->image = FileUpload::File('user', $request->file('image'));
+            $user->image = FileUpload::File('images/user', $request->image);
         }
         $user->save();
 
@@ -98,8 +98,10 @@ class AuthController extends Controller
         }
 
         if ($request->file('image')) {
-            FileUpload::Delete($user->image);
-            $user->image = FileUpload::File('user', $request->file('image'));
+            if (file_exists($user->image)) {
+                unlink($user->image);
+            }
+            $user->image = FileUpload::File('images/user', $request->image);
         }
         $user->save();
 

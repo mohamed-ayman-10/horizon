@@ -22,7 +22,9 @@ return new class extends Migration
             $table->float('total_price')->nullable();
             $table->boolean('status')->default('0');
             $table->integer('percentage')->nullable();
+            $table->string('sale')->nullable();
             $table->foreignId('category_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('name_category_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('vendor_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });

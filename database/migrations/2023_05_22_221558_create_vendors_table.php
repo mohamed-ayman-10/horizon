@@ -18,12 +18,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->unique();
+            $table->string('phone')->unique()->nullable();
             $table->string('cash_number')->nullable();
-            $table->string('password', 999);
+            $table->string('password', 999)->nullable();
+            $table->string('provider_id')->nullable();
             $table->integer('phone_verified')->nullable();
             $table->text('image')->nullable();
-            $table->foreignId('governorate_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('governorate_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

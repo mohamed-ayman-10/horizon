@@ -24,6 +24,8 @@ class ProductController extends Controller
         DB::beginTransaction();
         try {
 
+            return $request;
+
             $request->validate([
                 'title_en' => 'required|string|min:2',
                 'title_ar' => 'required|string|min:2',
@@ -53,7 +55,7 @@ class ProductController extends Controller
                 foreach ($request->images as $file) {
                     $image = new Image();
                     $image->product_id = $product->id;
-                    $image->path = Storage::disk('uploadFile')->put('products', $file);
+                    $image->path = FileUpload::File('images/products', $file);
                     $image->save();
                 }
 

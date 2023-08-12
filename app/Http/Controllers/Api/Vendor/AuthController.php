@@ -69,7 +69,7 @@ class AuthController extends Controller
         $vendor->governorate_id = $request->governorate_id;
 
         if ($request->file('image')) {
-            $vendor->image = FileUpload::File('vendor', $request->file('image'));
+            $vendor->image = FileUpload::File('images/vendor', $request->image);
         }
         $vendor->save();
 
@@ -103,10 +103,10 @@ class AuthController extends Controller
             $vendor->password = bcrypt($request->password);
         }
         if ($request->file('image')) {
-            if(Storage::disk('uploadFile')->exists($vendor->image)) {
-                FileUpload::Delete($vendor->image);
+            if (file_exists($vendor->image)) {
+                unlink($vendor->image);
             }
-            $vendor->image = FileUpload::File('vendor', $request->file('image'));
+            $vendor->image = FileUpload::File('images/vendor', $request->image);
         }
 
         $vendor->save();

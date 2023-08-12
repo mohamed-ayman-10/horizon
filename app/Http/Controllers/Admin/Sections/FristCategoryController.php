@@ -27,6 +27,7 @@ class FristCategoryController extends Controller
                 'ids' => 'Please Select Product'
             ]);
 
+
             foreach ($request->ids as $id) {
                 FristCategory::query()->create(['product_id' => $id]);
             }

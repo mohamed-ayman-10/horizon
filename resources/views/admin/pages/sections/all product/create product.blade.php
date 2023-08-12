@@ -72,6 +72,7 @@
                                                     <h1 class="title fw-bold fs-20 text-truncate">
                                                         <a href="{{ route('admin.show', $product->id) }}">{{ $product->title }}</a>
                                                     </h1>
+                                                    <div ><h4 class="title fw-bold fs-20 d-inline-block">Id : </h4> {{ $product->id }}</div>
                                                     <div class="price mb-2">${{ $product->price }}</div>
                                                 </div>
                                             </div>

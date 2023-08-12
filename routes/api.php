@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\AdsController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CardController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\SectionController;
 use App\Http\Controllers\Api\SocialiteController;
+use App\Http\Controllers\Api\Vendor\ImageProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
@@ -32,10 +34,19 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
     Route::post('/user-update', [AuthController::class, 'updateUser']);
 });
 
-// Home
+// Auth User
+Route::post('user/socialite', [SocialiteController::class, 'socialite']);
+// Auth Vendor
+Route::post('vendor/socialite', [\App\Http\Controllers\Api\Vendor\SocialiteController::class, 'socialite']);
 
+//Route::get('auth/facebook', [SocialiteController::class , 'facebookLogin']);
+//Route::get('auth/facebook/redirect', [SocialiteController::class , 'facebookRedirect']);
+//Route::get('auth/google', [SocialiteController::class , 'googleLogin']);
+//Route::get('auth/google/redirect', [SocialiteController::class , 'googleRedirect']);
+
+// Home
 Route::get('slider', [HomeController::class, 'All_Slider']);
-Route::get('about', [HomeController::class, 'about']);
+Route::get('setting', [HomeController::class, 'setting']);
 
 
 // Categories
@@ -76,6 +87,11 @@ Route::middleware('jwt.verify')->group(function () {
             Route::post('{id}/delete', 'destroy');
             Route::post('/get', 'getProductById');
         });
+    Route::controller(ImageProductController::class)->prefix('product/image')->group(function () {
+        Route::post('/create', 'store');
+        Route::post('update', 'update');
+        Route::post('delete', 'destroy');
+    });
 
 
     // Cart
@@ -127,10 +143,12 @@ Route::controller(SectionController::class)->prefix('section')->group(function (
     Route::post('lastCategory', 'lastCategory');
     Route::post('firstProduct', 'firstProduct');
     Route::post('lastProduct', 'lastProduct');
+    Route::get('all_product_section', 'allProductSection');
+    Route::get('all_product', 'allProduct');
 });
 
-// Socialite
-//Route::controller(SocialiteController::class)->prefix('auth')->group(function () {
-//    Route::get('facebook', 'facebook');
-//    Route::get('facebook/redirect', 'facebookRedirect');
-//});
+// Ads
+Route::controller(AdsController::class)->prefix('ads')->group(function () {
+    Route::get('login', 'loginAds');
+    Route::get('modal', 'modalAds');
+});

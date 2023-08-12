@@ -19,8 +19,8 @@
         <div class="main-sidemenu">
             <div class="slide-left disabled" id="slide-left">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24"
-                     viewBox="0 0 24 24">
-                    <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"/>
+                    viewBox="0 0 24 24">
+                    <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />
                 </svg>
             </div>
             <ul class="side-menu">
@@ -52,13 +52,14 @@
                     <ul class="slide-menu">
                         <li><a href="{{ route('admin.all_products') }}" class="slide-item">Products</a></li>
                         <li><a href="{{ route('admin.all_product_unsharing') }}" class="slide-item">Publish Product</a>
+                        <li><a href="{{ route('admin.report.index') }}" class="slide-item">Report</a>
                         </li>
                     </ul>
                 </li>
                 <li class="slide">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                            class="side-menu__icon fa fa-user-circle-o"></i><span class="side-menu__label">Technical Support</span><i
-                            class="angle fe fe-chevron-right"></i>
+                            class="side-menu__icon fa fa-user-circle-o"></i><span class="side-menu__label">Technical
+                            Support</span><i class="angle fe fe-chevron-right"></i>
                     </a>
                     <ul class="slide-menu">
                         <li><a href="{{ route('admin.technical_support.vendors') }}" class="slide-item">Vendors</a></li>
@@ -74,11 +75,16 @@
                         </a>
                     </li>
                 @endcan
+                <li>
+                    <a class="side-menu__item has-link" href="{{ route('admin.name_category.index') }}">
+                        <i class="side-menu__icon fe fe-list"></i>
+                        <span class="side-menu__label">Admin categories </span>
+                    </a>
+                </li>
                 @can('vendors')
                     <li class="slide">
                         <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon fa fa-user-plus"></i><span
-                                class="side-menu__label">Vendors</span><i
+                                class="side-menu__icon fa fa-user-plus"></i><span class="side-menu__label">Vendors</span><i
                                 class="angle fe fe-chevron-right"></i>
                         </a>
                         <ul class="slide-menu">
@@ -128,6 +134,16 @@
                 @endcan
                 <li class="slide">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                            class="side-menu__icon fa fa-shopping-bag"></i><span class="side-menu__label">Ads</span><i
+                            class="angle fe fe-chevron-right"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li><a href="{{ route('admin.ads.login.index') }}" class="slide-item">Login Ads</a></li>
+                        <li><a href="{{ route('admin.ads.modal.index') }}" class="slide-item">Modal Ads</a></li>
+                    </ul>
+                </li>
+                <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                             class="side-menu__icon fa fa-object-ungroup"></i><span
                             class="side-menu__label">Sections</span><i class="angle fe fe-chevron-right"></i>
                     </a>
@@ -137,21 +153,29 @@
                             <li><a href="{{ route('admin.section.offer.index') }}" class="slide-item">Offers</a></li>
                             <li><a href="{{ route('admin.section.weeklyOffer.index') }}" class="slide-item">Weekly
                                     Offers</a></li>
-                            <li><a href="{{ route('admin.section.fristCategory.index') }}" class="slide-item">First Category</a></li>
-                            <li><a href="{{ route('admin.section.lastCategory.index') }}" class="slide-item">Last Category</a></li>
-                            <li><a href="{{ route('admin.section.firstProduct.index') }}" class="slide-item">First Product</a></li>
-                            <li><a href="{{ route('admin.section.lastProduct.index') }}" class="slide-item">Last Product</a></li>
+                            <li><a href="{{ route('admin.section.fristCategory.index') }}" class="slide-item">First
+                                    Category</a></li>
+                            <li><a href="{{ route('admin.section.lastCategory.index') }}" class="slide-item">Last
+                                    Category</a></li>
+                            <li><a href="{{ route('admin.section.firstProduct.index') }}" class="slide-item">First
+                                    Product</a></li>
+                            <li><a href="{{ route('admin.section.lastProduct.index') }}" class="slide-item">Last
+                                    Product</a></li>
                             <li><a href="{{ route('admin.product_section.index') }}" class="slide-item">All Product</a>
                             </li>
                         @endcan
                     </ul>
                 </li>
                 @can('setting')
-                    <li>
-                        <a class="side-menu__item has-link" href="{{ route('admin.get_home') }}">
-                            <i class="side-menu__icon fe fe-settings"></i>
-                            <span class="side-menu__label">Settings</span>
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
+                                class="side-menu__icon fe fe-settings"></i><span class="side-menu__label">Setting</span><i
+                                class="angle fe fe-chevron-right"></i>
                         </a>
+                        <ul class="slide-menu">
+                            <li><a href="{{ route('admin.get_home') }}" class="slide-item">General Setting</a></li>
+                            <li><a href="{{ route('admin.whatsapp.index') }}" class="slide-item">WhatsApp</a></li>
+                        </ul>
                     </li>
                 @endcan
             </ul>

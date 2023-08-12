@@ -32,7 +32,7 @@
                                     <td>{{$item->title}}</td>
                                     <td>{{isset($item->parent) ? $item->parents->title : 'Main Ctegory'}}</td>
                                     <td>
-                                        <img src="{{asset('assets/' . $item->image)}}" width="100" height="100"/>
+                                        <img src="{{asset($item->image)}}" width="100" height="100"/>
 
                                     </td>
 
@@ -47,6 +47,9 @@
                                            data-bs-toggle="modal"
                                            href="javascript:void(0)"><i class="fa fa-trash"></i></a>
                                         @endcan
+                                        <a href="{{route('admin.category_section.show', $item->id)}}" class="btn btn-warning btn-sm">
+                                            <i class="fa fa-shopping-bag"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 <!-- Update Category MODAL -->

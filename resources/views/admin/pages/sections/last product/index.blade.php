@@ -78,7 +78,7 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <form action="{{ route('admin.section.offer.store') }}" method="post">
+                <form action="{{ route('admin.section.lastProduct.store') }}" method="post">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
@@ -134,6 +134,7 @@
                                                         <a
                                                             href="{{ route('admin.show', $product->id) }}">{{ $product->title }}</a>
                                                     </h1>
+                                                    <div ><h4 class="title fw-bold fs-20 d-inline-block">Id : </h4> {{ $product->id }}</div>
                                                     <div class="price mb-2">${{ $product->price }}</div>
                                                 </div>
                                             </div>

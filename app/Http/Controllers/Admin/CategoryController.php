@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Traits\FileUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Kavenegar\Enums\General;
 
 class CategoryController extends Controller
 {
@@ -47,7 +48,7 @@ class CategoryController extends Controller
             $category->parent = $request->category_id;
 //                $category->image = Storage::disk('uploadFile')->put('categories', $request->image);
             if ($request->file('image')) {
-                $category->image = FileUpload::File('categories', $request->image);
+                $category->image = FileUpload::File('images/categories', $request->image);
             }
             $category->save();
 
@@ -73,8 +74,10 @@ class CategoryController extends Controller
             ];
             $category->parent = $request->category_id;
             if ($request->hasFile('image')) {
-                FileUpload::Delete($category->image);
-                $category->image = FileUpload::File('category', $request->file('image'));
+                if (file_exists($category->image)) {
+                    unlink($category->image);
+                }
+                $category->image = FileUpload::File('images/categories', $request->image);
             };
             $category->save();
 

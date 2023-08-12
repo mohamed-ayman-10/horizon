@@ -48,6 +48,7 @@
                                                 href="{{ route('admin.show', $product->id) }}">
                                                 {{ $product->title }}
                                             </a></h1>
+                                        <div ><h4 class="title fw-bold fs-20 d-inline-block">Id : </h4> {{ $product->id }}</div>
                                         @if ($product->total_price)
                                             <div class="price" title="${{ $product->total_price }}">
                                                 ${{ $product->total_price }}</div>

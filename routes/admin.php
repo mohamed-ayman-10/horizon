@@ -1,13 +1,20 @@
 <?php
 
-use App\Http\Controllers\Admin\AllProductController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\ReceiveController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DeleviryController;
-use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\LoginAddController;
+use App\Http\Controllers\Admin\ModalAddController;
+use App\Http\Controllers\Admin\WhatsAppController;
+use App\Http\Controllers\Admin\AllProductController;
+use App\Http\Controllers\Admin\NameCategoryController;
 use App\Http\Controllers\Admin\ProductSectionController;
-use App\Http\Controllers\Admin\ReceiveController;
+use App\Http\Controllers\Admin\CategorySectionController;
 use App\Http\Controllers\Admin\TechnicalSupportController;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -208,4 +215,35 @@ Route::prefix('technical_support')->middleware('auth:admin')->name('technical_su
 
     Route::get('vendors', 'vendors')->name('vendors');
     Route::post('search_vendors', 'SearchVendors')->name('search_vendors');
+});
+
+
+// Category Section
+Route::middleware('auth:admin')->group(function () {
+    Route::resource('category_section', CategorySectionController::class);
+    Route::get('category_section/products/{id}', [CategorySectionController::class, 'products'])->name('category_section.products');
+    Route::post('category_section/storeProduct', [CategorySectionController::class, 'storeProduct'])->name('category_section.storeProduct');
+    Route::delete('category_section/delete/{id}', [CategorySectionController::class, 'delete'])->name('category_section.delete');
+    Route::get('category_section/search', [CategorySectionController::class, 'search'])->name('category_section.search');
+});
+
+
+Route::prefix('setting')->name('setting.')->group(function () {
+    Route::post('store', [HomeController::class, 'store'])->name('store');
+    Route::post('update', [HomeController::class, 'update'])->name('update');
+});
+
+// WhatsApp
+Route::controller(WhatsAppController::class)->prefix('whatsapp')->name('whatsapp.')->middleware('auth:admin')->group(function () {
+    Route::get('', 'index')->name('index');
+    Route::post('store', 'store')->name('store');
+});
+
+Route::resource('name_category', NameCategoryController::class)->middleware('auth:admin');
+
+Route::resource('report', ReportController::class)->middleware('auth:admin');
+
+Route::middleware('auth:admin')->prefix('ads')->name('ads.')->group(function () {
+    Route::resource('login', LoginAddController::class);
+    Route::resource('modal', ModalAddController::class);
 });
